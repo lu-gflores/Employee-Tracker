@@ -15,7 +15,6 @@ connection.connect(function (err) {
     mainPrompt();
 })
 
-
 //inquirer
 const mainPrompt = () => {
     inquirer.prompt([
@@ -35,10 +34,17 @@ const mainPrompt = () => {
             ]
         }
     ]).then(function(answer) {
-        
+        if(answer.userChoice === "View all employees"){
+            selectAll();
+        } else if (answer.userChoice === "View all employees by department") {
+            
+        }
     })
 }
 
 const selectAll = () => {
-
+    connection.query("SELECT * FROM employee", (err, result) => {
+        if (err) throw err;
+        console.table(result);
+    })
 }
