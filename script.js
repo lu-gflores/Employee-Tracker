@@ -27,7 +27,7 @@ const mainPrompt = () => {
                 "View all roles",
                 "View all departments",
                 "Add Employee",
-                "Add Emloyee Role",
+                "Add Employee Role",
                 "Add Employee Department",
                 "Remove Employee",
                 "Update Employee Role"
@@ -41,6 +41,8 @@ const mainPrompt = () => {
             selectAllDepartments();
         } else if (answer.userChoice === "Add Employee") {
             addEmployee();
+        } else if (answer.userChoice === "Add Employee Role") {
+            addRole();
         }
     });
 }
@@ -90,5 +92,33 @@ const addEmployee = () => {
             }
         )
     })
-    
+}
+const addRole = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Enter Role: ",
+            name: "role"
+        },
+        {
+            type: "input",
+            message: "Enter role salary: ",
+            name: "salary"
+        },
+        {
+            type: 'input',
+            message: "Enter role ID:",
+            name: "roleid"
+        }
+    ]).then(function (answer) {
+        let query = connection.query(
+            "INSERT INTO role SET title=?, salary=?, department_id=?",
+            [answer.role, answer.salary, answer.roleid],
+            function(err, result) {
+                if(err) throw err;
+                console.log(result.affectedRows + " added in roles\n");
+                mainPrompt();
+            }
+        )
+    })
 }
