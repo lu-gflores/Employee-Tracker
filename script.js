@@ -1,6 +1,22 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
+//connection 
+const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "root",
+    database: "employee_manager_db"
+});
+connection.connect(function (err) {
+    if (err) throw err;
+    console.log("Connect as id " + connection.threadId);
+    mainPrompt();
+})
+
+
+//inquirer
 const mainPrompt = () => {
     inquirer.prompt([
         {
@@ -22,5 +38,7 @@ const mainPrompt = () => {
         
     })
 }
-mainPrompt();
 
+const selectAll = () => {
+
+}
