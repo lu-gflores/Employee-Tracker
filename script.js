@@ -24,27 +24,44 @@ const mainPrompt = () => {
             name: 'userChoice',
             choices: [
                 "View all employees",
-                "View all employees by department",
-                "View all Employees by Manager",
+                "View all roles",
+                "View all departments",
                 "Add Employee",
                 "Add Emloyee Role",
-                "Add Employee",
+                "Add Employee Department",
                 "Remove Employee",
                 "Update Employee Role"
             ]
         }
     ]).then(function(answer) {
         if(answer.userChoice === "View all employees"){
-            selectAll();
-        } else if (answer.userChoice === "View all employees by department") {
-            
+            selectAllEmployees();
+        } else if (answer.userChoice === "View all roles") {
+            selectAllRoles();
+        } else if (answer.userChoice === "View all departments") {
+            selectAllDepartments();
         }
     })
 }
-
-const selectAll = () => {
+//Select all queries
+const selectAllEmployees = () => {
     connection.query("SELECT * FROM employee", (err, result) => {
         if (err) throw err;
         console.table(result);
     })
+    mainPrompt();
+}
+const selectAllRoles = () =>{
+    connection.query("SELECT * FROM role", (err, result) => {
+        if (err) throw err;
+        console.table(result);
+    })
+    mainPrompt();
+}
+const selectAllDepartments = () =>{
+    connection.query("SELECT * FROM department", (err, result) => {
+        if (err) throw err;
+        console.table(result);
+    })
+    mainPrompt();
 }
