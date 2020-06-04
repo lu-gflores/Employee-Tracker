@@ -43,6 +43,8 @@ const mainPrompt = () => {
             addEmployee();
         } else if (answer.userChoice === "Add Employee Role") {
             addRole();
+        } else if (answer.userChoice === "Add Employee Department") {
+            addDept();
         }
     });
 }
@@ -117,6 +119,25 @@ const addRole = () => {
             function(err, result) {
                 if(err) throw err;
                 console.log(result.affectedRows + " added in roles\n");
+                mainPrompt();
+            }
+        )
+    })
+}
+const addDept = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Enter Department Name: ",
+            name: "deptName"
+        },
+    ]).then(function (answer) {
+        let query = connection.query(
+            "INSERT INTO department SET name=?",
+            [answer.deptName],
+            function(err, result) {
+                if(err) throw err;
+                console.log(result.affectedRows + " added in department\n");
                 mainPrompt();
             }
         )
