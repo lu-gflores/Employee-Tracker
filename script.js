@@ -44,6 +44,8 @@ const mainPrompt = () => {
             addRole();
         } else if (answer.userChoice === "Add Employee Department") {
             addDept();
+        } else if (answer.userChoice === "Update Employee Role") {
+            updateEmployeeRole();
         }
     });
 }
@@ -149,19 +151,26 @@ const updateEmployeeRole = () => {
     connection.query(
         "SELECT * FROM employee", function (err, result) {
             if (err) throw err;
-        for(let i = 0; i < result.answer; i++ ) {
-
+        for(let i = 0; i < result.length; i++ ) {
+            currentEmployees.push(result[i].id + " " + result[i].first_name + " " + result[i].last_name)
         }
-
-        }
-    )
-
+    
+        
     inquirer.prompt([
         {
             type: "list",
             message: "Which employee would you to like to update their role?",
             name: "updateRole",
-            
+            choices: currentEmployees
+        }, {
+            type:"list",
+            message: "Select their new role: ",
+            name: "newRole",
+            choices: ['']
         }
-    ])
+    ]).then( function (answer) {
+
+    });
+
+});
 }
