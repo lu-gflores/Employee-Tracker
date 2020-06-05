@@ -13,8 +13,7 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("Connect as id " + connection.threadId);
     mainPrompt();
-})
-
+});
 //inquirer
 const mainPrompt = () => {
     inquirer.prompt([
@@ -142,4 +141,27 @@ const addDept = () => {
             }
         )
     })
+}
+//update Employee roles
+const updateEmployeeRole = () => {
+        //need to get current employees and their roles
+    let currentEmployees = [];
+    connection.query(
+        "SELECT * FROM employee", function (err, result) {
+            if (err) throw err;
+        for(let i = 0; i < result.answer; i++ ) {
+
+        }
+
+        }
+    )
+
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employee would you to like to update their role?",
+            name: "updateRole",
+            
+        }
+    ])
 }
