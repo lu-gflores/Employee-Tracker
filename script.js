@@ -73,6 +73,7 @@ const selectAllDepartments = () => {
 }
 //adding items to tables
 const addEmployee = () => {
+    
     inquirer.prompt([
         {
             type: "input",
@@ -97,6 +98,15 @@ const addEmployee = () => {
     })
 }
 const addRole = () => {
+    //store departments to display as choices
+    let deptArray =[];
+    //retrieving departments name to push into array
+    connection.query(
+        "SELECT * FROM department", function (err, result) {
+            if (err) throw err;
+        for(let i = 0; i < result.length; i++ ) {
+            deptArray.push(result[i].name)
+        }
     inquirer.prompt([
         {
             type: "input",
@@ -109,14 +119,22 @@ const addRole = () => {
             name: "salary"
         },
         {
-            type: 'input',
-            message: "Enter role ID:",
-            name: "roleid"
+            type: 'list',
+            message: "Select department to add role to:",
+            name: "dept",
+            choices: deptArray
         }
     ]).then(function (answer) {
+    
+        let deptID;
+        for(let n = 0; n < deptArray.length; n++) {
+            if (result[n].name === answer.dept){
+                deptID = result[n].id;
+            }
+        }
         let query = connection.query(
             "INSERT INTO role SET title=?, salary=?, department_id=?",
-            [answer.role, answer.salary, answer.roleid],
+            [answer.role, answer.salary, answer.deptID],
             function(err, result) {
                 if(err) throw err;
                 console.log(result.affectedRows + " added in roles\n");
@@ -124,6 +142,7 @@ const addRole = () => {
             }
         )
     })
+    });
 }
 const addDept = () => {
     inquirer.prompt([
@@ -146,16 +165,16 @@ const addDept = () => {
 }
 //update Employee roles
 const updateEmployeeRole = () => {
-        //need to get current employees and their roles
+    //need to get current employees and their roles
+    //created array to store current employees to display in prompt so that user can select one
     let currentEmployees = [];
+    //display all employees 
     connection.query(
         "SELECT * FROM employee", function (err, result) {
             if (err) throw err;
         for(let i = 0; i < result.length; i++ ) {
             currentEmployees.push(result[i].id + " " + result[i].first_name + " " + result[i].last_name)
         }
-    
-        
     inquirer.prompt([
         {
             type: "list",
@@ -163,13 +182,15 @@ const updateEmployeeRole = () => {
             name: "updateRole",
             choices: currentEmployees
         }, {
-            type:"list",
-            message: "Select their new role: ",
-            name: "newRole",
-            choices: ['']
+            type:"input",
+            message: "Enter their new role: ",
+            name: "newRole"
         }
     ]).then( function (answer) {
-
+            connection.query(
+            "UPDATE employee SET ? WHERE ?",
+            []
+            )
     });
 
 });

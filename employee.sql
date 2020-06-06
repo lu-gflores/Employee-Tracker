@@ -26,7 +26,7 @@ role_id INTEGER,
 manager_id INTEGER,
 PRIMARY KEY (id),
 FOREIGN KEY (role_id) REFERENCES role(id),
-FOREIGN KEY (manager_id) REFERENCES employee(id)
+FOREIGN KEY (manager_id) REFERENCES role(id)
 );
 -- Inserting data to tables
 -- Department
@@ -70,3 +70,4 @@ INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Martha", "Stevens", 3, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Donovan", "Love", 3, null);
+select * from employee;
