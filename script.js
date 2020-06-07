@@ -29,6 +29,7 @@ const mainPrompt = () => {
                 "Add Employee Department",
                 "Remove Employee",
                 "Remove Role",
+                "Remove Department",
                 "Update Employee Role",
                 "Exit"
             ]
@@ -51,6 +52,8 @@ const mainPrompt = () => {
                 removeEmployee();
             } else if(answer.userChoice === 'Remove Role') {
                 removeRole();
+            } else if(answer.userChoice === 'Remove Department') {
+                removeDept();
             }
 
             else {
@@ -176,7 +179,6 @@ const addDept = () => {
 const updateEmployeeRole = () => {
     //need to get current employees and their roles
     //created array to store current employees to display in prompt so that user can select one
-
     //query employees to display in prompt
 connection.query(
 "SELECT * FROM employee", function (err, result) {
@@ -270,6 +272,35 @@ const removeRole = () => {
             function(err) {
                 if (err) throw err;
                 console.log(answer.delRole + " has been removed from roles.");;
+                mainPrompt();
+            }
+            )
+        })
+    })
+}
+const removeDept = () => {
+    connection.query("SELECT * FROM department", function (err, result) {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                type:'list',
+                message: 'Which department would you like to remove?',
+                name: 'delDept',
+                choices: function () {
+                    let deptArr = [];
+                    for(let i =0; i < result.length; i++) {
+                        deptArr.push(result[i].id + " " +result[i].name)
+                    }
+                    return deptArr;
+                }
+            }
+        ]).then(function (answer) {
+            let choice = parseInt(answer.delDept.split(" ")[0]);
+            connection.query("DELETE FROM department WHERE id=?",
+            [choice],
+            function(err) {
+                if (err) throw err;
+                console.log(answer.delDept + " has been removed from roles.");;
                 mainPrompt();
             }
             )
