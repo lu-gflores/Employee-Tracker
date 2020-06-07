@@ -204,7 +204,7 @@ connection.query(
             [answer.newRole, empId],
             function (err) {
                 if (err) throw err;
-                console.log(answer.newRole + "has been updated to " + empId);
+                console.log(answer.newRole + " role id has been updated to EmployeeID " + empId);
                 mainPrompt();
             }
         )
