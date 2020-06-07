@@ -9,13 +9,14 @@ This project involves creating an CLI to allow users to view and manage company 
 ## Resources Used
 
 * MySQL WorkBench 
+* Node JS
 * Dependences
   * Inquirer 
   * mysql
 
 ## Table of Contents
 
-* [Installation](#installtion)
+* [Installation](#installation)
 * [Usage](#usage)
 * [Tests](#tests)
 * [Author](#author)

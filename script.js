@@ -83,32 +83,50 @@ const selectAllDepartments = () => {
     })
     mainPrompt();
 }
-
+// const viewByManager = () => {
+//     connection.query("SELECT id, first_name, last_name, role_id, manager_id FROM employee WHERE ")
+// }
 //adding items to tables
 const addEmployee = () => {
-
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "Enter Employee's first name",
-            name: "firstName"
-        },
-        {
-            type: "input",
-            message: "Enter Employee's last name",
-            name: "lastName"
+    connection.query(
+        'SELECT * FROM role', function (err, result) {
+            if (err) throw err;
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "Enter Employee's first name",
+                    name: "firstName"
+                },
+                {
+                    type: "input",
+                    message: "Enter Employee's last name",
+                    name: "lastName"
+                }, {
+                    type: 'list',
+                    message:'Select role id:',
+                    name: 'role',
+                    choices: function () {
+                        let roleChoice = []
+                        for(let i = 0; i < result.length; i++) {
+                            roleChoice.push(result[i].id  + " " + result[i].title);
+                        }
+                        return roleChoice;
+                    }
+                } 
+            ]).then(function (answer) {
+                let roleid = parseInt(answer.role.split(" ")[0]);
+                let query = connection.query(
+                    "INSERT INTO employee SET first_name=?, last_name=?, role_id=?",
+                    [answer.firstName, answer.lastName, roleid],
+                    function (err) {
+                        if (err) throw err;
+                        console.log(answer.firstName + " " + answer.lastName + " added as employee\n");
+                        mainPrompt();
+                    }
+                )
+            })
         }
-    ]).then(function (answer) {
-        let query = connection.query(
-            "INSERT INTO employee SET first_name=?, last_name=?",
-            [answer.firstName, answer.lastName],
-            function (err) {
-                if (err) throw err;
-                console.log(answer.firstName + " " + answer.lastName + " added as employee\n");
-                mainPrompt();
-            }
-        )
-    })
+    );
 }
 const addRole = () => {
     //store departments to display as choices
