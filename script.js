@@ -13,7 +13,7 @@ connection.connect(function (err) {
     console.log("Connect as id " + connection.threadId);
     mainPrompt();
 });
-//inquirer
+//inquirer main prompt
 const mainPrompt = () => {
     inquirer.prompt([
         {
@@ -102,9 +102,9 @@ const addEmployee = () => {
         let query = connection.query(
             "INSERT INTO employee SET first_name=?, last_name=?",
             [answer.firstName, answer.lastName],
-            function (err, result) {
+            function (err) {
                 if (err) throw err;
-                console.log(result.affectedRows + " added as employee\n");
+                console.log(answer.firstName + " " + answer.lastName + " added as employee\n");
                 mainPrompt();
             }
         )
@@ -112,14 +112,11 @@ const addEmployee = () => {
 }
 const addRole = () => {
     //store departments to display as choices
-    let deptArray = [];
     //retrieving departments name to push into array
     connection.query(
         "SELECT * FROM department", function (err, result) {
             if (err) throw err;
-            for (let i = 0; i < result.length; i++) {
-                deptArray.push(result[i].name)
-            }
+           
             inquirer.prompt([
                 {
                     type: "input",
@@ -135,21 +132,22 @@ const addRole = () => {
                     type: 'list',
                     message: "Select department to add role to:",
                     name: "dept",
-                    choices: deptArray
-                }
-            ]).then(function (answer) {
-                let deptID;
-                for (let n = 0; n < deptArray.length; n++) {
-                    if (result[n].name == answer.dept) {
-                        deptID = result[n].id;
+                    choices: function () {
+                        let deptArr = [];
+                        for (let i = 0; i < result.length; i++) {
+                            deptArr.push(result[i].id + " " + result[i].name)
+                        }
+                        return deptArr;
                     }
                 }
+            ]).then(function (answer) {
+              let deptID = parseInt(answer.dept.split(" ")[0]);
                 let query = connection.query(
                     "INSERT INTO role SET title=?, salary=?, department_id=?",
-                    [answer.role, answer.salary, answer.deptID],
-                    function (err, result) {
+                    [answer.role, answer.salary, deptID],
+                    function (err) {
                         if (err) throw err;
-                        console.log(result.affectedRows + " added in roles\n");
+                        console.log(answer.role + " added in roles\n");
                         mainPrompt();
                     }
                 )
@@ -167,9 +165,9 @@ const addDept = () => {
         let query = connection.query(
             "INSERT INTO department SET name=?",
             [answer.deptName],
-            function (err, result) {
+            function (err) {
                 if (err) throw err;
-                console.log(result.affectedRows + " added in department\n");
+                console.log(answer.deptName + " added in department\n");
                 mainPrompt();
             }
         )
@@ -177,8 +175,6 @@ const addDept = () => {
 }
 //update Employee roles
 const updateEmployeeRole = () => {
-    //need to get current employees and their roles
-    //created array to store current employees to display in prompt so that user can select one
     //query employees to display in prompt
 connection.query(
 "SELECT * FROM employee", function (err, result) {
@@ -197,22 +193,18 @@ connection.query(
             }
         }, {
             type: "input",
-            message: "Enter their new role: ",
+            message: "Enter their new role ID: ",
             name: "newRole"
         }
     ]).then(function (answer) {
-        let empId;
-        for(let i = 0; i < result.length; i++) {
-            if(result[i].id === answer.updateRole) {
-                empId = result[i];
-            }
-        }
+        //turn id into an integer, take first index from array
+        let empId = parseInt(answer.updateRole.split(" ")[0]);
         connection.query(
             "UPDATE employee SET role_id=? WHERE id=?",
             [answer.newRole, empId],
-            function (err, result) {
+            function (err) {
                 if (err) throw err;
-                console.table(result);
+                console.log(answer.newRole + "has been updated to " + empId);
                 mainPrompt();
             }
         )
@@ -242,7 +234,7 @@ const removeEmployee = () => {
             [choice], 
             function(err) {
                 if (err) throw err;
-                console.log(answer.delEmployee + " has been removed from employees.")
+                console.log(answer.delEmployee + " has been removed from employee.")
                 mainPrompt();
             }
             )
@@ -300,7 +292,7 @@ const removeDept = () => {
             [choice],
             function(err) {
                 if (err) throw err;
-                console.log(answer.delDept + " has been removed from roles.");;
+                console.log(answer.delDept + " has been removed from department.");;
                 mainPrompt();
             }
             )
