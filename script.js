@@ -28,6 +28,7 @@ const mainPrompt = () => {
                 "Add Employee Role",
                 "Add Employee Department",
                 "Remove Employee",
+                "Remove Role",
                 "Update Employee Role",
                 "Exit"
             ]
@@ -47,9 +48,11 @@ const mainPrompt = () => {
             } else if (answer.userChoice === "Update Employee Role") {
                 updateEmployeeRole();
             } else if(answer.userChoice === 'Remove Employee') {
-                removeEmployee(0);
+                removeEmployee();
+            } else if(answer.userChoice === 'Remove Role') {
+                removeRole();
             }
-            
+
             else {
                 connection.end();
             }
@@ -77,10 +80,6 @@ const selectAllDepartments = () => {
     })
     mainPrompt();
 }
-
-
-
-
 
 //adding items to tables
 const addEmployee = () => {
@@ -218,6 +217,7 @@ connection.query(
     });
 });
 }
+//remove queries
 const removeEmployee = () => {
     connection.query("SELECT * FROM employee", function (err, result) {
         if (err) throw err;
@@ -240,7 +240,36 @@ const removeEmployee = () => {
             [choice], 
             function(err) {
                 if (err) throw err;
-                console.log(answer.delEmployee + " has been removed from database.")
+                console.log(answer.delEmployee + " has been removed from employees.")
+                mainPrompt();
+            }
+            )
+        })
+    })
+}
+const removeRole = () => {
+    connection.query("SELECT * FROM role", function (err, result) {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                type:'list',
+                message: 'Which role would you like to remove?',
+                name: 'delRole',
+                choices: function () {
+                    let roleArr = [];
+                    for(let i =0; i < result.length; i++) {
+                        roleArr.push(result[i].id + " " +result[i].title + " " + result[i].salary + " " + result[i].department_id)
+                    }
+                    return roleArr;
+                }
+            }
+        ]).then(function (answer) {
+            let choice = parseInt(answer.delRole.split(" ")[0]);
+            connection.query("DELETE FROM role WHERE id=?",
+            [choice],
+            function(err) {
+                if (err) throw err;
+                console.log(answer.delRole + " has been removed from roles.");;
                 mainPrompt();
             }
             )
