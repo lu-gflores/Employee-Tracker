@@ -56,7 +56,7 @@ Removed John Doe from employee table.
 Updated employee **John Wick** role ID.
 
 ## Tests
-To ensure this project runs the minimum functions, a seed sql file has been made to pre-populate the database to ensure the basic functionalities are met. 
+To ensure this project runs the minimum functions, a seed sql file has been made to pre-populate the database to ensure the basic functionalities are met. Tests include view, update, and remove all employees, roles, and departments.
 
 ## Author
 
