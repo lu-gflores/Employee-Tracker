@@ -91,6 +91,7 @@ const viewByManager = () => {
         if (err) throw err;
         console.table(result);
     })
+    mainPrompt();
 }
 //adding items to tables
 const addEmployee = () => {
