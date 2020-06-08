@@ -24,6 +24,7 @@ const mainPrompt = () => {
                 "View all employees",
                 "View all roles",
                 "View all departments",
+                "View by Manager",
                 "Add Employee",
                 "Add Employee Role",
                 "Add Employee Department",
@@ -54,6 +55,8 @@ const mainPrompt = () => {
                 removeRole();
             } else if(answer.userChoice === 'Remove Department') {
                 removeDept();
+            } else if(answer.userChoice === 'View by Manager') {
+                viewByManager();
             }
 
             else {
@@ -83,9 +86,12 @@ const selectAllDepartments = () => {
     })
     mainPrompt();
 }
-// const viewByManager = () => {
-//     connection.query("SELECT id, first_name, last_name, role_id, manager_id FROM employee WHERE ")
-// }
+const viewByManager = () => {
+    connection.query("SELECT employee.id, first_name, last_name, role_id, manager_id FROM employee LEFT JOIN role ON role.id = employee.role_id WHERE employee.manager_id IS NOT NULL", (err, result) => {
+        if (err) throw err;
+        console.table(result);
+    })
+}
 //adding items to tables
 const addEmployee = () => {
     connection.query(
